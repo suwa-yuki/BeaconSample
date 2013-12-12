@@ -11,9 +11,7 @@
 @implementation BERAppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
-{
-    // バックグラウンドで音声再生
-    [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryAmbient error:nil];
+{   
     return YES;
 }
 							

@@ -31,10 +31,12 @@
         self.region = [[CLBeaconRegion alloc]
                        initWithProximityUUID:self.proximityUUID
                        identifier:@"jp.classmethod.testregion"];
+        self.region.notifyOnEntry = YES;
+        self.region.notifyOnExit = YES;
+        self.region.notifyEntryStateOnDisplay = NO;
         
         // 領域監視を開始
-//        [self.manager startMonitoringForRegion:self.region];
-        [self.manager requestStateForRegion:self.region];
+        [self.manager startMonitoringForRegion:self.region];
         // 距離測定を開始
         [self.manager startRangingBeaconsInRegion:self.region];
     }
@@ -45,6 +47,7 @@
          didEnterRegion:(CLRegion *)region
 {
     NSLog(@"%@", NSStringFromSelector(_cmd));
+    [self sendNotification:@"didEnterRegion"];
 }
 
 // Beaconから出たときに呼ばれる
@@ -52,6 +55,7 @@
           didExitRegion:(CLRegion *)region
 {
     NSLog(@"%@", NSStringFromSelector(_cmd));
+    [self sendNotification:@"didExitRegion"];
 }
 
 // Beaconとの状態が確定したときに呼ばれる
@@ -64,12 +68,10 @@
         case CLRegionStateInside:
             NSLog(@"CLRegionStateInside");
             [self playSound:@"enter"];
-            [self sendNotification:@"CLRegionStateInside"];
             break;
         case CLRegionStateOutside:
             NSLog(@"CLRegionStateOutside");
             [self playSound:@"exit"];
-            [self sendNotification:@"CLRegionStateOutside"];
             break;
         case CLRegionStateUnknown:
             NSLog(@"CLRegionStateUnknown");
@@ -114,18 +116,23 @@
     major = beacon.major;
     minor = beacon.minor;
     
+    CGFloat alpha = 1.0;
     switch (proximity) {
         case CLProximityUnknown:
             proximityString = @"CLProximityUnknown";
+            alpha = 0.3;
             break;
         case CLProximityImmediate:
             proximityString = @"CLProximityImmediate";
+            alpha = 1.0;
             break;
         case CLProximityNear:
             proximityString = @"CLProximityNear";
+            alpha = 0.8;
             break;
         case CLProximityFar:
             proximityString = @"CLProximityFar";
+            alpha = 0.5;
             break;
         default:
             break;
@@ -141,15 +148,15 @@
     if ([minor isEqualToNumber:@1]) {
         // Beacon A
         self.beaconLabel.text = @"A";
-        self.view.backgroundColor = [UIColor colorWithRed:0 green:0.749 blue:1.0 alpha:1.0];
+        self.view.backgroundColor = [UIColor colorWithRed:0 green:0.749 blue:1.0 alpha:alpha];
     } else if ([minor isEqualToNumber:@2]) {
         // Beacon B
         self.beaconLabel.text = @"B";
-        self.view.backgroundColor = [UIColor colorWithRed:0.604 green:0.804 blue:0.196 alpha:1.0];
+        self.view.backgroundColor = [UIColor colorWithRed:0.604 green:0.804 blue:0.196 alpha:alpha];
     } else if ([minor isEqualToNumber:@3]) {
         // Beacon C
         self.beaconLabel.text = @"C";
-        self.view.backgroundColor = [UIColor colorWithRed:1.0 green:0.412 blue:0.706 alpha:1.0];
+        self.view.backgroundColor = [UIColor colorWithRed:1.0 green:0.412 blue:0.706 alpha:alpha];
     } else {
         self.beaconLabel.text = @"-";
         self.view.backgroundColor = [UIColor colorWithRed:0.663 green:0.663 blue:0.663 alpha:1.0];

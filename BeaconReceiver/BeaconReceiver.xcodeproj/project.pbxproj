@@ -219,6 +219,13 @@
 				LastUpgradeCheck = 0500;
 				ORGANIZATIONNAME = suwa.yuki;
 				TargetAttributes = {
+					B61E1CE41858C698006BED17 = {
+						SystemCapabilities = {
+							com.apple.BackgroundModes = {
+								enabled = 1;
+							};
+						};
+					};
 					B61E1D051858C698006BED17 = {
 						TestTargetID = B61E1CE41858C698006BED17;
 					};

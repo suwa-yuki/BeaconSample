@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 @import CoreLocation;
-@import AVFoundation;
+@import AudioToolbox;
 
 @interface BERViewController : UIViewController <CLLocationManagerDelegate>
 
@@ -16,8 +16,7 @@
 @property (strong, nonatomic) CLLocationManager *manager;
 @property (strong, nonatomic) CLBeaconRegion *region;
 
-@property (strong, nonatomic) AVAudioPlayer *enter;
-@property (strong, nonatomic) AVAudioPlayer *exit;
+@property (nonatomic) NSNumber *currentMinor;
 
 @property (weak, nonatomic) IBOutlet UILabel *beaconLabel;
 @property (weak, nonatomic) IBOutlet UILabel *uuidLabel;

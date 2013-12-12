@@ -24,7 +24,8 @@
 		B61E1D1E1858C6A7006BED17 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B61E1D1D1858C6A7006BED17 /* CoreLocation.framework */; };
 		B61E1D251858C7D1006BED17 /* enter.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = B61E1D231858C7D1006BED17 /* enter.mp3 */; };
 		B61E1D261858C7D1006BED17 /* exit.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = B61E1D241858C7D1006BED17 /* exit.mp3 */; };
-		B61E1D281858C855006BED17 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B61E1D271858C855006BED17 /* AVFoundation.framework */; };
+		C88D36B518598A7F00062E45 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C88D36B418598A7F00062E45 /* AudioToolbox.framework */; };
+		C88D36B71859911100062E45 /* change.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = C88D36B61859911100062E45 /* change.mp3 */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -61,6 +62,8 @@
 		B61E1D231858C7D1006BED17 /* enter.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = enter.mp3; sourceTree = "<group>"; };
 		B61E1D241858C7D1006BED17 /* exit.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = exit.mp3; sourceTree = "<group>"; };
 		B61E1D271858C855006BED17 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		C88D36B418598A7F00062E45 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
+		C88D36B61859911100062E45 /* change.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = change.mp3; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -68,7 +71,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B61E1D281858C855006BED17 /* AVFoundation.framework in Frameworks */,
+				C88D36B518598A7F00062E45 /* AudioToolbox.framework in Frameworks */,
 				B61E1D1E1858C6A7006BED17 /* CoreLocation.framework in Frameworks */,
 				B61E1CEB1858C698006BED17 /* CoreGraphics.framework in Frameworks */,
 				B61E1CED1858C698006BED17 /* UIKit.framework in Frameworks */,
@@ -111,6 +114,7 @@
 		B61E1CE71858C698006BED17 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				C88D36B418598A7F00062E45 /* AudioToolbox.framework */,
 				B61E1D271858C855006BED17 /* AVFoundation.framework */,
 				B61E1D1D1858C6A7006BED17 /* CoreLocation.framework */,
 				B61E1CE81858C698006BED17 /* Foundation.framework */,
@@ -138,6 +142,7 @@
 		B61E1CEF1858C698006BED17 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				C88D36B61859911100062E45 /* change.mp3 */,
 				B61E1D231858C7D1006BED17 /* enter.mp3 */,
 				B61E1D241858C7D1006BED17 /* exit.mp3 */,
 				B61E1CF01858C698006BED17 /* BeaconReceiver-Info.plist */,
@@ -247,6 +252,7 @@
 				B61E1D261858C7D1006BED17 /* exit.mp3 in Resources */,
 				B61E1D251858C7D1006BED17 /* enter.mp3 in Resources */,
 				B61E1CF31858C698006BED17 /* InfoPlist.strings in Resources */,
+				C88D36B71859911100062E45 /* change.mp3 in Resources */,
 				B61E1CFC1858C698006BED17 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

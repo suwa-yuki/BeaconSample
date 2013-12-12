@@ -18,14 +18,6 @@
 {
     [super viewDidLoad];
     
-    // 効果音
-    NSString *path = [[NSBundle mainBundle] pathForResource:@"enter" ofType:@"mp3"];
-    NSURL *url = [NSURL fileURLWithPath:path];
-    self.enter = [[AVAudioPlayer alloc] initWithContentsOfURL:url error:nil];
-    path = [[NSBundle mainBundle] pathForResource:@"exit" ofType:@"mp3"];
-    url = [NSURL fileURLWithPath:path];
-    self.exit = [[AVAudioPlayer alloc] initWithContentsOfURL:url error:nil];
-    
     if ([CLLocationManager isMonitoringAvailableForClass:[CLBeaconRegion class]]) {
         // CLLocationManagerの生成とデリゲートの設定
         self.manager = [CLLocationManager new];
@@ -40,106 +32,27 @@
                        initWithProximityUUID:self.proximityUUID
                        identifier:@"jp.classmethod.testregion"];
         
-        // Beaconによる距離測定を開始
+        // 領域監視を開始
+//        [self.manager startMonitoringForRegion:self.region];
+        [self.manager requestStateForRegion:self.region];
+        // 距離測定を開始
         [self.manager startRangingBeaconsInRegion:self.region];
     }
 }
-
-// ------------------------------
-// CLLocationManagerDelegate
-// ------------------------------
-
-// Responding to Location Events
-
-// locationManager:didUpdateLocations:
-// Tells the delegate that new location data is available.
-- (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations
-{
-    NSLog(@"%@", NSStringFromSelector(_cmd));
-}
-
-
-// locationManager:didFailWithError:
-// Tells the delegate that the location manager was unable to retrieve a location value.
-- (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error
-{
-    NSLog(@"%@", NSStringFromSelector(_cmd));
-}
-
-
-// locationManager:didFinishDeferredUpdatesWithError:
-// Tells the delegate that updates will no longer be deferred.
-- (void)locationManager:(CLLocationManager *)manager didFinishDeferredUpdatesWithError:(NSError *)error
-{
-    NSLog(@"%@", NSStringFromSelector(_cmd));
-}
-
-
-// Pausing Location Updates
-
-// locationManagerDidPauseLocationUpdates:
-// Tells the delegate that location updates were paused. (required)
-- (void)locationManagerDidPauseLocationUpdates:(CLLocationManager *)manager
-{
-    NSLog(@"%@", NSStringFromSelector(_cmd));
-}
-
-
-// locationManagerDidResumeLocationUpdates:
-// Tells the delegate that the delivery of location updates has resumed. (required)
-- (void)locationManagerDidResumeLocationUpdates:(CLLocationManager *)manager
-{
-    NSLog(@"%@", NSStringFromSelector(_cmd));
-}
-
-
-// Responding to Heading Events
-
-// locationManager:didUpdateHeading:
-// Tells the delegate that the location manager received updated heading information.
-- (void)locationManager:(CLLocationManager *)manager didUpdateHeading:(CLHeading *)newHeading
-{
-    NSLog(@"%@", NSStringFromSelector(_cmd));
-}
-
-
-// locationManagerShouldDisplayHeadingCalibration:
-// Asks the delegate whether the heading calibration alert should be displayed.
-- (BOOL)locationManagerShouldDisplayHeadingCalibration:(CLLocationManager *)manager
-{
-    NSLog(@"%@", NSStringFromSelector(_cmd));
-    return TRUE;
-}
-
-
-// Responding to Region Events
-
-// locationManager:didEnterRegion:
-// Tells the delegate that the user entered the specified region.
 
 // Beaconに入ったときに呼ばれる
 - (void)locationManager:(CLLocationManager *)manager
          didEnterRegion:(CLRegion *)region
 {
     NSLog(@"%@", NSStringFromSelector(_cmd));
-    [self.enter play];
 }
-
-
-// locationManager:didExitRegion:
-// Tells the delegate that the user left the specified region.
 
 // Beaconから出たときに呼ばれる
 - (void)locationManager:(CLLocationManager *)manager
           didExitRegion:(CLRegion *)region
 {
     NSLog(@"%@", NSStringFromSelector(_cmd));
-    [self.exit play];
 }
-
-
-// locationManager:didDetermineState:forRegion:
-// Tells the delegate about the state of the specified region. (required)
 
 // Beaconとの状態が確定したときに呼ばれる
 - (void)locationManager:(CLLocationManager *)manager
@@ -150,9 +63,13 @@
     switch (state) {
         case CLRegionStateInside:
             NSLog(@"CLRegionStateInside");
+            [self playSound:@"enter"];
+            [self sendNotification:@"CLRegionStateInside"];
             break;
         case CLRegionStateOutside:
             NSLog(@"CLRegionStateOutside");
+            [self playSound:@"exit"];
+            [self sendNotification:@"CLRegionStateOutside"];
             break;
         case CLRegionStateUnknown:
             NSLog(@"CLRegionStateUnknown");
@@ -163,43 +80,30 @@
 }
 
 
-// locationManager:monitoringDidFailForRegion:withError:
-// Tells the delegate that a region monitoring error occurred.
 - (void)locationManager:(CLLocationManager *)manager monitoringDidFailForRegion:(CLRegion *)region withError:(NSError *)error
 {
     NSLog(@"%@", NSStringFromSelector(_cmd));
 }
 
 
-// locationManager:didStartMonitoringForRegion:
-// Tells the delegate that a new region is being monitored.
 - (void)locationManager:(CLLocationManager *)manager didStartMonitoringForRegion:(CLRegion *)region
 {
     NSLog(@"%@", NSStringFromSelector(_cmd));
 }
 
 
-// Responding to Ranging Events
-
-// locationManager:didRangeBeacons:inRegion:
-// Tells the delegate that one or more beacons are in range. (required)
 - (void)locationManager:(CLLocationManager *)manager
         didRangeBeacons:(NSArray *)beacons
                inRegion:(CLBeaconRegion *)region
 {
     NSLog(@"%@", NSStringFromSelector(_cmd));
     
-    if ([beacons count] == 0) {
-        // Beaconが存在しない場合は何もしない
-        return;
-    }
-    
     CLProximity proximity = CLProximityUnknown;
     NSString *proximityString = @"CLProximityUnknown";
     CLLocationAccuracy locationAccuracy = 0.0;
     NSInteger rssi = 0;
-    NSNumber* major = 0;
-    NSNumber* minor = 0;
+    NSNumber* major = @0;
+    NSNumber* minor = @0;
     
     // 最初のオブジェクト = 最も近いBeacon
     CLBeacon *beacon = beacons.firstObject;
@@ -250,21 +154,18 @@
         self.beaconLabel.text = @"-";
         self.view.backgroundColor = [UIColor colorWithRed:0.663 green:0.663 blue:0.663 alpha:1.0];
     }
+    
+    if (minor != nil && self.currentMinor != nil && ![minor isEqualToNumber:self.currentMinor]) {
+        [self playSound:@"change"];
+    }
+    self.currentMinor = minor;
 }
 
-
-// locationManager:rangingBeaconsDidFailForRegion:withError:
-// Tells the delegate that an error occurred while gathering ranging information for a set of beacons. (required)
 - (void)locationManager:(CLLocationManager *)manager rangingBeaconsDidFailForRegion:(CLBeaconRegion *)region withError:(NSError *)error
 {
     NSLog(@"%@", NSStringFromSelector(_cmd));
 }
 
-
-// Responding to Authorization Changes
-
-// ocationManager:didChangeAuthorizationStatus:
-// Tells the delegate that the authorization status for the application changed.
 - (void)locationManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status
 {
     NSLog(@"%@", NSStringFromSelector(_cmd));
@@ -283,6 +184,41 @@
             break;
         default:
             break;
+    }
+}
+
+- (void)sendNotification:(NSString*)message
+{
+    // 通知を作成する
+    UILocalNotification *notification = [[UILocalNotification alloc] init];
+    
+    notification.fireDate = [[NSDate date] init];
+    notification.timeZone = [NSTimeZone defaultTimeZone];
+    notification.alertBody = message;
+    notification.alertAction = @"Open";
+    notification.soundName = UILocalNotificationDefaultSoundName;
+    
+    // 通知を登録する
+    [[UIApplication sharedApplication] scheduleLocalNotification:notification];
+}
+
+
+- (void)playSound:(NSString*)name
+{
+    //////////////////////////////////////////////////
+    //
+    // 音声ファイルは以下のサイトからお借りしています。
+    // http://www.skipmore.com/sound/
+    //
+    //////////////////////////////////////////////////
+    
+    NSBundle *bundle = [NSBundle mainBundle];
+    NSString *path = [bundle pathForResource:name ofType:@"mp3"];
+    NSURL *url = [NSURL fileURLWithPath:path];
+    SystemSoundID sndId;
+    OSStatus err = AudioServicesCreateSystemSoundID((CFURLRef)CFBridgingRetain(url), &sndId);
+    if (!err) {
+        AudioServicesPlaySystemSound(sndId);
     }
 }
 

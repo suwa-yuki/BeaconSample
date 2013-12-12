@@ -112,7 +112,6 @@
                     </view>
                     <connections>
                         <outlet property="accuracyLabel" destination="Y89-4j-Ogg" id="EnI-rC-QJb"/>
-                        <outlet property="accuraryLabel" destination="Y89-4j-Ogg" id="Ks4-pV-fab"/>
                         <outlet property="beaconLabel" destination="cVP-74-88q" id="6fh-Vp-ZLg"/>
                         <outlet property="majorLabel" destination="KSz-eT-UXr" id="RpM-4R-vyc"/>
                         <outlet property="minorLabel" destination="fnM-88-iZL" id="YeP-RX-jKa"/>

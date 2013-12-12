@@ -23,6 +23,17 @@
     self.manager = [[CBPeripheralManager alloc] initWithDelegate:self queue:nil options:nil];
 }
 
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+}
+
+- (void)viewDidDisappear:(BOOL)animated
+{
+    [super viewDidDisappear:animated];
+    [self.manager stopAdvertising];
+}
+
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
@@ -31,15 +42,46 @@
 - (void)startAdvertising:(NSInteger)minor
 {
     NSLog(@"beacon minor=%ld", (long)minor);
+    
     // CLBeaconRegionを作成してアドバタイズするデータを取得
     CLBeaconRegion *beaconRegion = [[CLBeaconRegion alloc] initWithProximityUUID:self.proximityUUID
                                                                            major:1
                                                                            minor:minor
                                                                       identifier:@"jp.classmethod.testregion"];
+    
     NSDictionary *beaconPeripheralData = [beaconRegion peripheralDataWithMeasuredPower:nil];
+    
+//    NSDictionary *beaconPeripheralData = [self beaconAdvertisement:self.proximityUUID
+//                                                             major:1
+//                                                             minor:minor
+//                                                     measuredPower:-58];
+    
     [self.manager stopAdvertising];
     // アドバタイズを開始
     [self.manager startAdvertising:beaconPeripheralData];
+}
+
+- (NSDictionary *)beaconAdvertisement:(NSUUID *)proximityUUID
+                                major:(uint16_t)major
+                                minor:(uint16_t)minor
+                        measuredPower:(int8_t)measuredPower  {
+    NSString *beaconKey = @"kCBAdvDataAppleBeaconKey";
+    
+    unsigned char advertisementBytes[21] = {0};
+    
+    [self.proximityUUID getUUIDBytes:(unsigned char *)&advertisementBytes];
+    
+    advertisementBytes[16] = (unsigned char)(major >> 8);
+    advertisementBytes[17] = (unsigned char)(major & 255);
+    
+    advertisementBytes[18] = (unsigned char)(minor >> 8);
+    advertisementBytes[19] = (unsigned char)(minor & 255);
+    
+    advertisementBytes[20] = measuredPower;
+    
+    NSMutableData *advertisement = [NSMutableData dataWithBytes:advertisementBytes length:21];
+    
+    return [NSDictionary dictionaryWithObject:advertisement forKey:beaconKey];
 }
 
 - (void)peripheralManagerDidUpdateState:(CBPeripheralManager *)peripheral

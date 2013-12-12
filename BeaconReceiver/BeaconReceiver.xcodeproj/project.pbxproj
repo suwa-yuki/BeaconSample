@@ -477,6 +477,7 @@
 				B61E1D191858C699006BED17 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		B61E1D1A1858C699006BED17 /* Build configuration list for PBXNativeTarget "BeaconReceiverTests" */ = {
 			isa = XCConfigurationList;
@@ -485,6 +486,7 @@
 				B61E1D1C1858C699006BED17 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

@@ -32,7 +32,7 @@
         self.manager.delegate = self;
         
         // 生成したUUIDからNSUUIDを作成
-        NSString *uuid = @"41282F26-524C-4F16-9E95-C06D90AF942A";
+        NSString *uuid = @"1E21BCE0-7655-4647-B492-A3F8DE2F9A02";
         self.proximityUUID = [[NSUUID alloc] initWithUUIDString:uuid];
         
         // CLBeaconRegionを作成

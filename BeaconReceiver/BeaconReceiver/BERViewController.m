@@ -18,11 +18,14 @@
 {
     [super viewDidLoad];
     
+    // CLLocationManagerの生成とデリゲートの設定
+    self.manager = [CLLocationManager new];
+    self.manager.delegate = self;
+}
+
+- (void)initializeMonitoring
+{
     if ([CLLocationManager isMonitoringAvailableForClass:[CLBeaconRegion class]]) {
-        // CLLocationManagerの生成とデリゲートの設定
-        self.manager = [CLLocationManager new];
-        self.manager.delegate = self;
-        
         // 生成したUUIDからNSUUIDを作成
         NSString *uuid = @"1E21BCE0-7655-4647-B492-A3F8DE2F9A02";
         self.proximityUUID = [[NSUUID alloc] initWithUUIDString:uuid];
@@ -143,7 +146,7 @@
     self.minorLabel.text = [NSString stringWithFormat:@"%@", minor];
     self.proximityLabel.text = proximityString;
     self.accuracyLabel.text = [NSString stringWithFormat:@"%f", locationAccuracy];
-    self.rssiLabel.text = [NSString stringWithFormat:@"%d", rssi];
+    self.rssiLabel.text = [NSString stringWithFormat:@"%d", (int)rssi];
     
     if ([minor isEqualToNumber:@1]) {
         // Beacon A
@@ -179,6 +182,11 @@
     switch (status) {
         case kCLAuthorizationStatusNotDetermined:
             NSLog(@"kCLAuthorizationStatusNotDetermined");
+            if ([self.manager respondsToSelector:@selector(requestWhenInUseAuthorization)]) {
+                [self.manager requestWhenInUseAuthorization];
+            } else {
+                [self initializeMonitoring];
+            }
             break;
         case kCLAuthorizationStatusRestricted:
             NSLog(@"kCLAuthorizationStatusRestricted");
@@ -188,6 +196,11 @@
             break;
         case kCLAuthorizationStatusAuthorized:
             NSLog(@"kCLAuthorizationStatusAuthorized");
+            [self initializeMonitoring];
+            break;
+        case kCLAuthorizationStatusAuthorizedWhenInUse:
+            NSLog(@"kCLAuthorizationStatusAuthorizedWhenInUse");
+            [self initializeMonitoring];
             break;
         default:
             break;
